@@ -23,4 +23,7 @@ O esqueleto do Servidor é esse abaixo :
 	
 	http.createServer(processRequest).listen(80);  
 	  
-Depois faremos mais explicações	  
+Depois faremos mais explicações
+
+
+	  
