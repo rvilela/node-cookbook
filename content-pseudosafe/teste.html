@@ -1,0 +1,25 @@
+var http = require('http');
+http.createServer(function (request, response) {
+	    var i;
+	    for (i = 1; i <= 20; i++) {
+	        if (i % 15 === 0) {
+	            document.write ("FizzBuzz<br>");
+	            continue;
+	        };  
+	
+	        if (i % 3 === 0) {
+	            document.write ("Fizz<br>");
+	            continue;
+	        };  
+	
+	        if (i % 5 === 0) {
+	            document.write ("Buzz<br>");
+	            continue;
+	        };  
+	
+	        document.write (i + "<br>");
+    }   
+}).listen(8080);
+
+// #{if i%3 is 0 then 'fizz' else ''}#{if i%5 is 0 then 'buzz' else ''}" or i for i in [1..100]
+//   console.log (a=n%5==0;b=n%3==0;if a and b then"FizzBuzz"else if b then"Fizz"else if a then"Buzz"else n) for n in [1..100]	
