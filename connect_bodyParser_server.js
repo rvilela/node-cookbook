@@ -6,11 +6,12 @@ connect(connect.limit('64kb'), connect.bodyParser(),
   function (request, response) {
     if (request.method === "POST") {
       console.log('User Posted:\n', request.body);
+      console.log(request.body.userinput1 + request.body.userinput2);
       response.end('You Posted:\n' + util.inspect(request.body));
     }
     if (request.method === "GET") {
       response.writeHead(200, {'Content-Type': 'text/html'});
       response.end(form);
     }
-  }).listen(80);
+  }).listen(8080);
 

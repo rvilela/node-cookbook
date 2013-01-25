@@ -1,49 +1,30 @@
 var http = require('http');
-var path = require('path');
-var fs = require('fs');
+var formidable = require('formidable');
+var form = require('fs').readFileSync('form.html');
 
-var mimeTypes = {
-  '.js' : 'text/javascript',
-  '.html': 'text/html',
-  '.css' : 'text/css'
-};
+http.createServer(function(request, response) {
+	if (request.method === "POST") {
+		var incoming = new formidable.IncomingForm();
+		incoming.uploadDir = 'uploads';
 
-var cache = {};
-function cacheAndDeliver(f, cb) {
-  console.log('loading ' + f + ' from cache');
-  if (!cache[f]) {
-    fs.readFile(f, function (err, data) {
-      if (!err) {
-        cache[f] = {content: data};
-      }     
-      cb(err, data);
-    });
-    return;
-  }
-  console.log('loading ' + f + ' from cache');
-  cb(null, cache[f].content);
-}
-
-http.createServer(function (request, response) {
-  var lookup = path.basename(decodeURI(request.url)) || 'index.html',
-    f='content/' + lookup;
-  console.log(f);
-  fs.exists(f, function (exists) { //path.exists for Node 0.6 and below
-    if (exists) {
-
-      cacheAndDeliver(f, function (err, data) {
-        if (err) {response.writeHead(500); response.end('Server Error!'); return; }
-        var headers={'Content-type':mimeTypes[path.extname(f)]};
-        response.writeHead(200, headers);
-        response.end(data); 
-         
-      });
-      return;
-        
-    } 
-      response.writeHead(404); //no such file found!
-      response.end('Page Not Found!');
-    
-  });
-
-}).listen(80);
+		incoming.on('fileBegin', function(field, file) {
+			console.log(file.name);
+			if (file.name) {
+				file.path += "-" + file.name;
+			}
+			console.log(file.path);
+			response.write(file.name + ' received\n');
+		}).on('field', function(field, value) {
+			response.write(field + ' : ' + value + '\n');
+		}).on('end', function() {
+			response.end('All files received');
+		});
+		incoming.parse(request);
+	}
+	if (request.method === "GET") {
+		response.writeHead(200, {
+			'Content-Type' : 'text/html'
+		});
+		response.end(form);
+	}
+}).listen(8080);
