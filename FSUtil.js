@@ -37,7 +37,7 @@ var FSUtil = function(pathStr, regExp) {
 		// console.log(myMvMethod);
 		myMvMethod(source, destination, function(err) {
 			if (err != undefined) {
-				console.log('Erro: ' + err);
+				console.log('%s'.red.bold, err);
 			}
 		});
 	};
